@@ -1,5 +1,7 @@
 // cotire example project main
 
+#include "precompiled.h"
+
 #include <string>
 
 #include "example.h"

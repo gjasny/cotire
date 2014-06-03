@@ -1,6 +1,11 @@
 # cotire example project
 
+add_library(acme STATIC acme.cpp)
+target_include_directories(acme PUBLIC acme)
+
 add_executable(example main.cpp example.cpp log.cpp log.h example.h)
+
+target_link_libraries(example acme)
 
 # enable warnings
 if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -16,6 +21,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "Intel")
 		set_target_properties(example PROPERTIES COMPILE_FLAGS "/W5")
 	endif()
 endif()
+
+set_target_properties(example PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "precompiled.h")
 
 cotire(example)
 
