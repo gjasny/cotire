@@ -1,7 +1,11 @@
 # cotire example project
 
+add_library(foo STATIC foo.cpp)
+target_include_directories(foo PUBLIC foo)
+
 add_library(acme STATIC acme.cpp)
 target_include_directories(acme PUBLIC acme)
+target_link_libraries(acme foo)
 
 add_executable(example main.cpp example.cpp log.cpp log.h example.h)
 
