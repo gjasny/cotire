@@ -1,6 +1,19 @@
+if(NOT CMAKE_GENERATOR MATCHES "Ninja" AND UNIX)
+  message(FATAL_ERROR "Need Ninja on Unix")
+endif()
+
 # cotire example project
 
+add_library(foo ${CMAKE_CURRENT_BINARY_DIR}/foo.c ${CMAKE_CURRENT_BINARY_DIR}/foo.h)
+include_directories(foo PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+
+add_custom_command(
+	OUTPUT foo.c foo.h
+	COMMAND sleep 5
+	COMMAND touch foo.c foo.h)
+
 add_executable(example main.cpp example.cpp log.cpp log.h example.h)
+add_dependencies(example foo)
 
 # enable warnings
 if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -11,6 +24,8 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	set_target_properties(example PROPERTIES COMPILE_FLAGS "-Wall -Wextra")
 endif()
 
+set_target_properties(example PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "stdafx.h")
+set_target_properties(example PROPERTIES COTIRE_ADD_UNITY_BUILD FALSE)
 cotire(example)
 
 # cotire sets the following properties
